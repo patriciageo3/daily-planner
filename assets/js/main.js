@@ -1,4 +1,7 @@
 $(document).ready(function() {
+    
+    let tasks = JSON.parse(localStorage.getItem("tasks"));
+    
     function addTask(event) {
         //event.preventDefault();
         let date = new Date();
@@ -34,8 +37,7 @@ $(document).ready(function() {
             event.preventDefault();
             alert("Your task time is messed up!");
         } else  {
-            let tasks = JSON.parse(localStorage.getItem("tasks")) || [] ;
-            
+            tasks = tasks || [] ; 
             let newTask = {
                 id,
                 task,
@@ -49,6 +51,28 @@ $(document).ready(function() {
         } 
     }
     
+    function displayTasks() {
+        let tasks = JSON.parse(localStorage.getItem("tasks"));
+        if (tasks !== null) {
+            //tasks.sort(sortAllTasks);
+            $.each(tasks, function(index, elem) {
+                $(".table").eq(0).append(`<tr id="${elem.id}">
+                                       <td>${elem.task} </td>
+                                       <td>${elem.taskPriority} </td>
+                                       <td>${elem.taskDate} </td>
+                                       <td>${elem.taskTime} </td>
+                                       <td><a href="edit.html?id='${elem.id}'">Edit</a> / <a href="#"> Remove</a></td>
+                                       </tr>`);
+            });
+            
+        }
+    }
+    
+    function sortAllTasks() {
+        
+    }
+    
+    displayTasks();
     
     $("#task-form").submit(function(event) {
         addTask(event);
