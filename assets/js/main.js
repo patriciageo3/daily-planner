@@ -1,10 +1,11 @@
 $(document).ready(function() {
     
-    let tasks = JSON.parse(localStorage.getItem("tasks"));
+    let tasks = JSON.parse(localStorage.getItem("tasks")); 
+    console.log(tasks);
     
     function sortGeneral(a, b) {
         return (a < b) ? -1 : (a > b) ? 1 : 0;
-        //return a - b; // does not work with strings!!!
+        //return a - b; // does not work as expected with strings!!!
     }
     
     function displayTasks() {
@@ -28,7 +29,8 @@ $(document).ready(function() {
                 return sortGeneral(aDate, bDate) || sortGeneral(aTime, bTime) || sortGeneral(aPriority, bPriority) || sortGeneral(aName, bName);
             });
              
-            /* tasks.sort((a,b) => {
+            /* ALTERNATIVE TO SORTING:
+            tasks.sort((a,b) => {
                 let aDateClean = a.taskDate.replace(/-/g, "");
                 let bDateClean = b.taskDate.replace(/-/g, "");
                 let aDate = parseInt(aDateClean);
@@ -50,15 +52,14 @@ $(document).ready(function() {
             });  */
              
             $.each(tasks, function(index, elem) {
-                $(".table").eq(0).append(`<tr id="${elem.id}">
+                $(".table").append(`<tr>
                                        <td>${elem.task} </td>
                                        <td>${elem.taskPriority} </td>
                                        <td>${elem.taskDate} </td>
                                        <td>${elem.taskTime} </td>
-                                       <td><a href="edit.html?id='${elem.id}'">Edit</a> / <a href="#"> Remove</a></td>
+                                       <td><a class="edit-link" href="edit.html?id=${elem.id}">Edit</a> / <a id="remove" href="#remove"> Remove</a></td>
                                        </tr>`);
-            });
-            
+            });   
         }
     }
     
@@ -83,9 +84,7 @@ $(document).ready(function() {
         let taskTime = $("#time").val(); // "01:00" / "13:00" 
         let timeCleaned = taskTime.split(":").join("");
         let timeSet = parseInt(timeCleaned);
-        
-        //console.log(taskDate, taskTime);
-        
+
         if ( !task ) {
             event.preventDefault();
             alert("Please insert a valid task!");  
@@ -110,9 +109,123 @@ $(document).ready(function() {
         } 
     }
     
+    function changeTask(event) {
+        let formerTaskId = $("#taskId").val();
+        for (let i = 0; i < tasks.length; ++i) {
+            if (tasks[i].id == formerTaskId) {
+                tasks.splice(i, 1);
+                //alert("from changeTask:" + i);
+                break;
+            }
+        }
+        addTask(event); 
+    }
+    
+    function removeTask(id) {
+        if (confirm("Are you sure you want to delete this task?")) {
+            for (let i = 0; i < tasks.length; ++i) {
+                if (tasks[i].id == id) {
+                    tasks.splice(i, 1);
+                    break;
+                }
+            }
+            localStorage.setItem("tasks", JSON.stringify(tasks));
+            window.location.reload();
+        }
+    }
+    
     displayTasks();
     
     $("#task-form").submit(function(event) {
         addTask(event);
     });
+    
+    $("#task-form-edit").submit(function() {
+        changeTask(event);
+    });
+    
+    $(".disabled").click(function(event) {
+        event.preventDefault();
+    });
+    
+    $(document).on("click", "table tr", function() {
+        let $targetName = $(event.target).prop("tagName"); 
+        let $editElem = $(event.target).parent();
+        //debugger;
+        if ( $targetName !== "A" && $targetName !== "TH" && $editElem.prop("tagName") === "TR") {
+            $editElem.toggleClass("bg-warning");
+            $("a.edit").toggleClass("disabled");
+            
+            $(".edit").click(function() {
+                let tdHref = $editElem.children().eq(4);
+                let idOnClick = tdHref.html().replace(/^<.*id=([\d]+).*/, "$1");
+                localStorage.setItem("idToEdit", idOnClick);
+                window.location.href = "edit.html";
+                console.log("menu clicked");
+            });
+            
+            //remove highlight if clicked outside of current item selected for edit
+            $(document).click(function(event) {
+                let $target = $(event.target).parent();
+                if (! $target.is($editElem) && $editElem.hasClass("bg-warning")) {
+                    $editElem.toggleClass("bg-warning");
+                    $("a.edit").toggleClass("disabled");
+                }
+            });
+            
+            //console.log("clicked!");
+            //debugger;
+        }
+    });
+    
+    $(document).on("click", "#remove", function() {
+        let idToDel = $(event.target).parent().html().replace(/^<.*id=([\d]+).*/, "$1");
+        removeTask(idToDel);
+    });
+    
+    $(".clearAll").click( function() {
+        if(confirm("Are you sure you want to delete all tasks? This action cannot be undone!")) {
+            localStorage.removeItem("tasks");
+            localStorage.removeItem("idToEdit");
+            window.location.reload();
+        }
+        
+    });
+
+    
 });
+    
+    function getQueryParam(name) {
+           let wholeQuery = window.location.search.substring(1);
+           let allParams = wholeQuery.split("&");
+           for (let i = 0; i < allParams.length; ++i) {
+                let query = allParams[i].split("=");
+                if(query[0] == name){ 
+                    return query[1];
+                }
+           }
+        }
+        
+    function getTask() {
+        let idOnClick =  localStorage.getItem("idToEdit");
+        let idToEdit = getQueryParam("id") || idOnClick;
+        console.log(idToEdit);
+        //debugger;
+        let allTasks = JSON.parse(localStorage.getItem("tasks"));
+        for (let i = 0; i < allTasks.length; ++i) {
+            if (allTasks[i].id == idToEdit) { //idToEdit is of type STRING, unlike id from tasks which is number!!!
+                $("#task-form-edit #task").val(allTasks[i].task);
+                $("#task-form-edit #priority").val(allTasks[i].taskPriority);
+                $("#task-form-edit #date").val(allTasks[i].taskDate);
+                $("#task-form-edit #time").val(allTasks[i].taskTime);
+                $("#task-form-edit #taskId").val(idToEdit);
+                //console.log("from getTask:" + i);
+                break;
+            }
+        }     
+    };
+    
+    if (window.location.href.indexOf("edit") > -1) {
+        getTask();
+    }
+    

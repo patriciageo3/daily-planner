@@ -19,3 +19,16 @@ td a:hover {
 td a:nth-of-type(2):hover {
     color:  #ff3300;
 }
+
+#taskId{
+    display: none;
+}
+
+.heading span {
+    color: #2eb82e;
+}
+
+.disabled, table tr td{
+    cursor: default;
+}
+

@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="Daily Planner for the needy who want to be neat.">
     <meta name="author" content="Patricia Georgescu">
-    <link rel="icon" href="../../../../favicon.ico">
+    <link rel="icon" href="assets/pics/favicon.ico">
 
-    <title>Daily Planner</title>
+    <title>Add Task | Daily Planner</title>
 
     <!-- Bootstrap core CSS -->
     <link href="assets/css/bootstrap.min.css" rel="stylesheet">
@@ -20,18 +20,21 @@
 
     <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
     <div class="container">
-      <a class="navbar-brand" href="dailyPlanner.html">Daily Planner</a>
+      <a class="navbar-brand" href="dailyPlanner.html">Add Entry | Daily Planner</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
 
       <div class="collapse navbar-collapse" id="navbar">
         <ul class="navbar-nav ml-auto">
+          <li class="nav-item home">
+            <a class="nav-link" href="dailyPlanner.html">Home</a>
+          </li>
           <li class="nav-item active">
-            <a class="nav-link" href="dailyPlanner.html">Home <span class="sr-only">(current)</span></a>
+            <a class="nav-link add" href="add.html" >Add Entry</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="add.html">Add Entry</a>
+            <a class="nav-link edit disabled" href="edit.html" >Edit Entry</a>
           </li>
         </ul>
       </div>
@@ -39,30 +42,31 @@
     </nav>
     
     <main role="main" class="container">
-        <h2 class="border-bottom pb-2"> My daily tasks </h2>
+        <h2 class='border-bottom pb-2 heading'> My daily tasks - <span> Add task </span> </h2>
         <br>
-        <form id="task-form" action="dailyPlanner.html">
-          <div class="form-group">
-            <label for="task">Task</label>
-            <input type="text" class="form-control" id="task" placeholder="Enter a task here" name="task" required>
+        <form id='task-form' action='dailyPlanner.html'>
+          <div class='form-group'>
+            <label for='task'>Task</label>
+            <input type='text' class='form-control' id='task' placeholder='Enter a task here' name='task' required>
           </div>
-          <div class="form-group">
-            <label for="priority"> Priority </label>
-            <select class="form-control" id="priority" name="priority">
-                <option value="low"> Low </option>
-                <option value="normal" selected> Normal </option>
-                <option value="high"> High </option>
+          <div class='form-group'>
+            <label for='priority'> Priority </label>
+            <select class='form-control' id='priority' name='priority'>
+                <option value='low'> Low </option>
+                <option value='normal' selected> Normal </option>
+                <option value='high'> High </option>
             </select>
           </div>
-          <div class="form-group" >
-            <label for="date">Date</label>
-            <input type="date" class="form-control" id="date" name="date" required>
+          <div class='form-group' >
+            <label for='date'>Date</label>
+            <input type='date' class='form-control' id='date' name='date' required>
           </div>
-          <div class="form-group" >
-            <label for="time">Time</label>
-            <input type="time" class="form-control" id="time" name="time" required>
+          <div class='form-group' >
+            <label for='time'>Time</label>
+            <input type='time' class='form-control' id='time' name='time' required>
           </div>
-          <button type="submit" class="btn btn-primary">Submit</button>
+          <input id='taskId'> </input>
+          <button type='submit' class='btn btn-primary'>Submit</button>
         </form>
 
     </main><!-- /.container -->
