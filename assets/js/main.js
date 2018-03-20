@@ -1,11 +1,9 @@
 $(document).ready(function() {
-    
     let tasks = JSON.parse(localStorage.getItem("tasks")); 
     console.log(tasks);
     
     function sortGeneral(a, b) {
         return (a < b) ? -1 : (a > b) ? 1 : 0;
-        //return a - b; // does not work as expected with strings!!!
     }
     
     function displayTasks() {
@@ -25,11 +23,10 @@ $(document).ready(function() {
                 let bPriority = (b.taskPriority === "low") ? 3 : (b.taskPriority === "normal") ? 2 : 1;
                 let aName = a.task.toLowerCase();
                 let bName = b.task.toLowerCase();
-                //debugger;
                 return sortGeneral(aDate, bDate) || sortGeneral(aTime, bTime) || sortGeneral(aPriority, bPriority) || sortGeneral(aName, bName);
             });
              
-            /* ALTERNATIVE TO SORTING:
+            /* ALTERNATIVE TO SORTING (a bit more messy):
             tasks.sort((a,b) => {
                 let aDateClean = a.taskDate.replace(/-/g, "");
                 let bDateClean = b.taskDate.replace(/-/g, "");
@@ -114,7 +111,6 @@ $(document).ready(function() {
         for (let i = 0; i < tasks.length; ++i) {
             if (tasks[i].id == formerTaskId) {
                 tasks.splice(i, 1);
-                //alert("from changeTask:" + i);
                 break;
             }
         }
@@ -151,7 +147,6 @@ $(document).ready(function() {
     $(document).on("click", "table tr", function() {
         let $targetName = $(event.target).prop("tagName"); 
         let $editElem = $(event.target).parent();
-        //debugger;
         if ( $targetName !== "A" && $targetName !== "TH" && $editElem.prop("tagName") === "TR") {
             $editElem.toggleClass("bg-warning");
             $("a.edit").toggleClass("disabled");
@@ -172,9 +167,6 @@ $(document).ready(function() {
                     $("a.edit").toggleClass("disabled");
                 }
             });
-            
-            //console.log("clicked!");
-            //debugger;
         }
     });
     
@@ -188,11 +180,8 @@ $(document).ready(function() {
             localStorage.removeItem("tasks");
             localStorage.removeItem("idToEdit");
             window.location.reload();
-        }
-        
+        }   
     });
-
-    
 });
     
     function getQueryParam(name) {
@@ -204,22 +193,20 @@ $(document).ready(function() {
                     return query[1];
                 }
            }
-        }
+    }
         
     function getTask() {
         let idOnClick =  localStorage.getItem("idToEdit");
         let idToEdit = getQueryParam("id") || idOnClick;
         console.log(idToEdit);
-        //debugger;
         let allTasks = JSON.parse(localStorage.getItem("tasks"));
         for (let i = 0; i < allTasks.length; ++i) {
-            if (allTasks[i].id == idToEdit) { //idToEdit is of type STRING, unlike id from tasks which is number!!!
+            if (allTasks[i].id == idToEdit) { //== used because idToEdit is of type STRING, unlike id from tasks which is number!!!
                 $("#task-form-edit #task").val(allTasks[i].task);
                 $("#task-form-edit #priority").val(allTasks[i].taskPriority);
                 $("#task-form-edit #date").val(allTasks[i].taskDate);
                 $("#task-form-edit #time").val(allTasks[i].taskTime);
                 $("#task-form-edit #taskId").val(idToEdit);
-                //console.log("from getTask:" + i);
                 break;
             }
         }     
