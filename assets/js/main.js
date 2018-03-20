@@ -1,6 +1,5 @@
 $(document).ready(function() {
     let tasks = JSON.parse(localStorage.getItem("tasks")); 
-    console.log(tasks);
     
     function sortGeneral(a, b) {
         return (a < b) ? -1 : (a > b) ? 1 : 0;
