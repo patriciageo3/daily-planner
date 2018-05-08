@@ -12,6 +12,10 @@ This Daily Planner was created using:
 * Bootstrap
 * jQuery
 
+## Live Demo
+
+To see the live demo, please [click here](https://patriciageo3.github.io/daily-planner/).
+
 ## Functionality
 
 * Add/ edit/ remove items one by one when done
@@ -25,4 +29,5 @@ Patricia Georgescu
 ## License & Copyrights
 Image from Unsplash.
 
+## Quick Live Preview
 ![Alt text](assets/pics/preview.JPG "Preview")
